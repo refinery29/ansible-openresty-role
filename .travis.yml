@@ -1,15 +1,12 @@
 ---
 language: python
 python: "2.7"
-sudo: true
-
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get purge nginx -qq
 
 install:
   - pip install ansible
 
-script: |
-  printf '[%s]\nlocalhost\n' "$(basename $(pwd))" > hosts-test
-  ansible-playbook --inventory hosts-test --connection local playbook.yml
+script:
+  ansible-playbook --inventory localhost, --connection local --syntax-check playbook.yml
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
