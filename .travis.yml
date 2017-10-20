@@ -5,6 +5,7 @@ sudo: true
 
 before_install:
   - sudo apt-get update -qq
+  - sudo apt-get purge nginx -qq
 
 install:
   - pip install ansible
