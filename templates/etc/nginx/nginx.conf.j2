@@ -1,0 +1,10 @@
+worker_processes auto;
+
+events {
+    worker_connections {{ openresty_worker_connections }};
+}
+
+http {
+    include /etc/nginx/conf.d/*;
+    include /etc/nginx/sites-enabled/*;
+}

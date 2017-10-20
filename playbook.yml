@@ -1,0 +1,5 @@
+---
+- hosts: "{{ playbook_dir | basename }}"
+  become: yes
+  roles:
+    - ../{{ playbook_dir | basename }}

@@ -1,0 +1,46 @@
+---
+- name: install OpenResty apt key
+  apt_key: data={{ openresty_apt_key }}
+
+- name: add OpenResty apt repo
+  apt_repository: repo="deb http://openresty.org/package/ubuntu {{ ansible_lsb.codename }} main"
+
+- name: install OpenResty package
+  apt: name=openresty
+
+- name: link /etc/openresty to /etc/nginx
+  file:
+    state: link
+    src: /etc/openresty
+    path: /etc/nginx
+
+- name: link openresty init script as nginx
+  file:
+    state: link
+    src: /etc/init.d/openresty
+    path: /etc/init.d/nginx
+  when: ansible_service_mgr == 'service'
+
+- name: create nginx service for systemd
+  copy:
+    src: etc/systemd/system/nginx.service
+    dest: /etc/systemd/system/nginx.service
+  when: ansible_service_mgr == 'systemd'
+
+- name: create standard nginx directories
+  file:
+    state: directory
+    path: /etc/nginx/{{ item }}
+  with_items:
+    - conf.d
+    - sites-enabled
+    - sites-available
+
+- name: install default nginx configuration
+  template:
+    src: etc/nginx/{{ item }}.j2
+    dest: /etc/nginx/{{ item }}
+  with_items:
+    - nginx.conf
+    - conf.d/defaults
+  notify: restart nginx
