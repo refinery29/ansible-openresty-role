@@ -14,7 +14,9 @@
     src: /etc/openresty
     path: /etc/nginx
 
-- name: link openresty init script as nginx
+- debug: var=ansible_service_mgr
+
+- name: link openresty init script as nginx for service
   file:
     state: link
     src: /etc/init.d/openresty
