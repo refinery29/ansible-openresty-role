@@ -4,8 +4,9 @@ galaxy_info:
   description: Install Nginx with OpenResty lua support, distributed by OpenResty Inc
   company: Refinery29
   license: GPL v3
-  min_ansible_version: 2.1
+  min_ansible_version: 1.9
   platforms:
     - name: Ubuntu
       versions:
-        - 14.04+
+        - 14.04
+        - 16.04
