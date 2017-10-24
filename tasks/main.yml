@@ -21,7 +21,6 @@
     state: link
     src: /etc/init.d/openresty
     path: /etc/init.d/nginx
-  when: ansible_service_mgr == 'service'
 
 - name: create nginx service for systemd
   copy:
