@@ -1,4 +1,7 @@
 ---
+- name: Install OpenResty gpg key
+  apt_key: url={{ openresty_gpg_key_url }}
+
 - name: Enable OpenResty repo
   apt_repository: repo="deb http://openresty.org/package/ubuntu {{ ansible_lsb.codename }} main"
 

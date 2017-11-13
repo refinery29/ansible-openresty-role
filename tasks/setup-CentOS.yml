@@ -1,4 +1,7 @@
 ---
+- name: Install OpenResty gpg key
+  rpm_key: key={{ openresty_gpg_key_url }}
+
 - name: Enable OpenResty repo
   template:
     src: openresty.repo.centos.j2

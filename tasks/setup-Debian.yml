@@ -1,4 +1,7 @@
 ---
+- name: Install OpenResty gpg key
+  apt_key: url={{ openresty_gpg_key_url }}
+
 - name: Enable wheezy backports repo
   apt_repository: repo="deb http://ftp.debian.org/debian wheezy-backports main"
   when: ansible_distribution_release == 'wheezy'
