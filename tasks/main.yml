@@ -1,21 +1,21 @@
 ---
-- name: install OpenResty apt key
-  apt_key: data={{ openresty_apt_key }}
+# Setup/install tasks
+- include: setup-RedHat.yml
+  when: ansible_distribution == 'Red Hat Enterprise Linux'
 
-- name: add OpenResty apt repo
-  apt_repository: repo="deb http://openresty.org/package/ubuntu {{ ansible_lsb.codename }} main"
+- include: setup-CentOS.yml
+  when: ansible_distribution == 'CentOS'
 
-- name: install OpenResty package
-  apt: name=openresty
-  register: install
+- include: setup-Fedora.yml
+  when: ansible_distribution == 'Fedora'
 
-# This is required so that when the following task replaces the defaulct nginx.conf
-# with a default server listening on 80, those agents aren't orphaned as they will
-# cause subsequent attempts to start nginx to fail with a conflict on 80
-- name: stop process started by install
-  when: install | changed
-  service: name=openresty state=stopped
+- include: setup-Debian.yml
+  when: ansible_distribution == 'Debian'
 
+- include: setup-Ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+
+# Configuration tasks
 - name: link /etc/openresty to /etc/nginx
   file:
     state: link
