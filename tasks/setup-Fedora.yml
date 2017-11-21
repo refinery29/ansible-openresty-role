@@ -11,6 +11,6 @@
     mode: 0644
 
 - name: Install OpenResty package
-  yum:
+  dnf:
     name: "openresty"
-    state: installed
+    state: latest
