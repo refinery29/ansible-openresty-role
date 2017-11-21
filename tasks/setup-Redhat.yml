@@ -13,4 +13,5 @@
 - name: Install OpenResty package
   yum:
     name: "openresty"
-    state: installed
+    update_cache: yes
+    state: latest
