@@ -7,6 +7,14 @@
 
 - name: install OpenResty package
   apt: name=openresty
+  register: install
+
+# This is required so that when the following task replaces the defaulct nginx.conf
+# with a default server listening on 80, those agents aren't orphaned as they will
+# cause subsequent attempts to start nginx to fail with a conflict on 80
+- name: stop process started by install
+  when: install | changed
+  service: name=openresty state=stopped
 
 - name: link /etc/openresty to /etc/nginx
   file:
@@ -34,11 +42,12 @@
 - name: create standard nginx directories
   file:
     state: directory
-    path: /etc/nginx/{{ item }}
+    path: "{{ item }}"
   with_items:
-    - conf.d
-    - sites-enabled
-    - sites-available
+    - /etc/nginx/conf.d
+    - /etc/nginx/sites-enabled
+    - /etc/nginx/sites-available
+    - /var/log/nginx
 
 - name: install default nginx configuration
   template:
