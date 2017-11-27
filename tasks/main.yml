@@ -31,9 +31,12 @@
     path: /etc/init.d/nginx
 
 - name: create nginx service for systemd
-  copy:
-    src: etc/systemd/system/nginx.service
+  template:
+    src: etc/systemd/system/nginx.service.j2
     dest: /etc/systemd/system/nginx.service
+    owner: root
+    group: root
+    mode: 0644
   when: ansible_service_mgr == 'systemd'
 
 - name: create standard nginx directories

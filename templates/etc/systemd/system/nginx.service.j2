@@ -4,7 +4,7 @@ After=syslog.target network.target remote-fs.target nss-lookup.target
 
 [Service]
 Type=forking
-PIDFile=/usr/local/openresty/nginx/logs/nginx.pid
+PIDFile={{ openresty_pidfile }}
 ExecStartPre=/usr/local/openresty/nginx/sbin/nginx -t
 ExecStart=/usr/local/openresty/nginx/sbin/nginx
 ExecReload=/bin/kill -s HUP $MAINPID
