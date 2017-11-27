@@ -31,11 +31,12 @@
 - name: create standard nginx directories
   file:
     state: directory
-    path: /etc/nginx/{{ item }}
+    path: "{{ item }}"
   with_items:
-    - conf.d
-    - sites-enabled
-    - sites-available
+    - /etc/nginx/conf.d
+    - /etc/nginx/sites-enabled
+    - /etc/nginx/sites-available
+    - /var/log/nginx
 
 - name: install default nginx configuration
   template:
