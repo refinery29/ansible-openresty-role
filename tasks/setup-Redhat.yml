@@ -1,0 +1,17 @@
+---
+- name: Install OpenResty gpg key
+  rpm_key: key={{ openresty_gpg_key_url }}
+
+- name: Enable OpenResty repo
+  template:
+    src: openresty.repo.rhel.j2
+    dest: /etc/yum.repos.d/openresty.repo
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install OpenResty package
+  yum:
+    name: "openresty"
+    update_cache: yes
+    state: latest

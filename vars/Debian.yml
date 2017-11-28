@@ -1,0 +1,3 @@
+---
+openresty_conf_path: /etc/openresty
+nginx_conf_path: /etc/nginx

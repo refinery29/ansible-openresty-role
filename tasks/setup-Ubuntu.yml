@@ -1,0 +1,17 @@
+---
+- name: Install OpenResty gpg key
+  apt_key: url={{ openresty_gpg_key_url }}
+
+- name: Enable OpenResty repo
+  apt_repository: repo="deb http://openresty.org/package/ubuntu {{ ansible_lsb.codename }} main"
+
+- name: Install OpenResty package
+  apt: name=openresty
+  register: install
+
+# This is required so that when the following task replaces the defaulct nginx.conf
+# with a default server listening on 80, those agents aren't orphaned as they will
+# cause subsequent attempts to start nginx to fail with a conflict on 80
+- name: stop process started by install
+  when: install | changed
+  service: name=openresty state=stopped

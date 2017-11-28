@@ -1,26 +1,30 @@
 ---
-- name: install OpenResty apt key
-  apt_key: data={{ openresty_apt_key }}
+# Variable setup
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
 
-- name: add OpenResty apt repo
-  apt_repository: repo="deb http://openresty.org/package/ubuntu {{ ansible_lsb.codename }} main"
+# Setup/install tasks
+- include: setup-RedHat.yml
+  when: ansible_distribution == 'Red Hat Enterprise Linux'
 
-- name: install OpenResty package
-  apt: name=openresty
-  register: install
+- include: setup-CentOS.yml
+  when: ansible_distribution == 'CentOS'
 
-# This is required so that when the following task replaces the defaulct nginx.conf
-# with a default server listening on 80, those agents aren't orphaned as they will
-# cause subsequent attempts to start nginx to fail with a conflict on 80
-- name: stop process started by install
-  when: install | changed
-  service: name=openresty state=stopped
+- include: setup-Fedora.yml
+  when: ansible_distribution == 'Fedora'
 
-- name: link /etc/openresty to /etc/nginx
+- include: setup-Debian.yml
+  when: ansible_distribution == 'Debian'
+
+- include: setup-Ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+
+# Configuration tasks
+- name: link config for openresty to nginx
   file:
     state: link
-    src: /etc/openresty
-    path: /etc/nginx
+    src: "{{ openresty_conf_path }}"
+    path: "{{ nginx_conf_path }}"
 
 - debug: var=ansible_service_mgr
 
@@ -42,17 +46,16 @@
 - name: create standard nginx directories
   file:
     state: directory
-    path: "{{ item }}"
+    path: "{{ nginx_conf_path }}/{{ item }}"
   with_items:
-    - /etc/nginx/conf.d
-    - /etc/nginx/sites-enabled
-    - /etc/nginx/sites-available
-    - /var/log/nginx
+    - conf.d
+    - sites-enabled
+    - sites-available
 
 - name: install default nginx configuration
   template:
     src: etc/nginx/{{ item }}.j2
-    dest: /etc/nginx/{{ item }}
+    dest: "{{ nginx_conf_path }}/{{ item }}"
   with_items:
     - nginx.conf
     - conf.d/defaults
