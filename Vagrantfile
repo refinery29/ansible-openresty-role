@@ -1,5 +1,5 @@
 Vagrant.configure(2) do |config|
-    machines = %w(bento/ubuntu-16.04 bento/ubuntu-14.04)
+    machines = %w(bento/ubuntu-16.04 bento/ubuntu-14.04 bento/centos-6.9 bento/centos-7.3 bento/fedora-26)
     machine_names = machines.map do |box|
         box.gsub(/(\/|\.)/, '-')
     end
@@ -12,6 +12,7 @@ Vagrant.configure(2) do |config|
                     raw_arguments: %w(-vv --diff),
                     playbook: 'playbook.yml',
                     groups: { role_name => machine_names },
+                    host_vars: { "bento-fedora-26" => {"ansible_python_interpreter" => "/usr/bin/python3"}},
                     limit: :all
             end
         end
