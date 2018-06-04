@@ -28,6 +28,11 @@
 
 - debug: var=ansible_service_mgr
 
+- name: remove any existing nginx init script
+  file:
+    state: absent
+    path: /etc/init.d/nginx
+
 - name: link openresty init script as nginx for service
   file:
     state: link
